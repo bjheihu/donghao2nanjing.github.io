@@ -24,12 +24,12 @@
     var CONFIG = {"hostname":"donghao2nanjing.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="1.测试环境  操作系统：Windows 10, 64bit 编译器：MinGW64  32位系统请下载对应的32位版本  MATLAB2017a  2017a之后会略有不同   2. 配置环境与流程  下载编译器MinGW64，对于64位系统而言，需要下载个安装器，可以安装相应版本的gcc编译器，我选择的是gcc-4.9.4，在测试环境中可以正常运行  安装器是m">
+  <meta name="description" content="1.测试环境 操作系统：Windows 10, 64bit 编译器：MinGW64 32位系统请下载对应的32位版本   MATLAB2017a 2017a之后会略有不同    2. 配置环境与流程 下载编译器MinGW64，对于64位系统而言，需要下载个安装器，可以安装相应版本的gcc编译器，我选择的是gcc-4.9.4，在测试环境中可以正常运行  安装器是mingw-w64-install，安">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Windows的MATLAB中用C语言写SFunction的一些坑">
 <meta property="og:url" content="http://donghao2nanjing.github.io/2018/07/09/matlab-sfunction/index.html">
 <meta property="og:site_name" content="Ramblings from Hao">
-<meta property="og:description" content="1.测试环境  操作系统：Windows 10, 64bit 编译器：MinGW64  32位系统请下载对应的32位版本  MATLAB2017a  2017a之后会略有不同   2. 配置环境与流程  下载编译器MinGW64，对于64位系统而言，需要下载个安装器，可以安装相应版本的gcc编译器，我选择的是gcc-4.9.4，在测试环境中可以正常运行  安装器是m">
+<meta property="og:description" content="1.测试环境 操作系统：Windows 10, 64bit 编译器：MinGW64 32位系统请下载对应的32位版本   MATLAB2017a 2017a之后会略有不同    2. 配置环境与流程 下载编译器MinGW64，对于64位系统而言，需要下载个安装器，可以安装相应版本的gcc编译器，我选择的是gcc-4.9.4，在测试环境中可以正常运行  安装器是mingw-w64-install，安">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2018-07-09T15:46:03.000Z">
 <meta property="article:modified_time" content="2020-09-01T16:47:14.118Z">
@@ -296,7 +296,7 @@ mjx-container[display="true"] + br {
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">1.测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E4%B8%8E%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">2. 配置环境与流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">4. 参考</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">1.测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E4%B8%8E%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">2. 配置环境与流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%8F%82%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">4. 参考</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -310,7 +310,7 @@ mjx-container[display="true"] + br {
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -474,33 +474,34 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="测试环境">1.测试环境</h2>
-<ul>
+        <h2 id="1-测试环境"><a href="#1-测试环境" class="headerlink" title="1.测试环境"></a>1.测试环境</h2><ul>
 <li>操作系统：Windows 10, 64bit</li>
-<li>编译器：MinGW64
-<ul>
+<li>编译器：MinGW64<ul>
 <li>32位系统请下载对应的32位版本</li>
-</ul></li>
-<li>MATLAB2017a
-<ul>
-<li>2017a之后会略有不同</li>
-</ul></li>
 </ul>
-<h2 id="配置环境与流程">2. 配置环境与流程</h2>
-<ol type="1">
+</li>
+<li>MATLAB2017a<ul>
+<li>2017a之后会略有不同</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-配置环境与流程"><a href="#2-配置环境与流程" class="headerlink" title="2. 配置环境与流程"></a>2. 配置环境与流程</h2><ol>
 <li><p>下载编译器MinGW64，对于64位系统而言，需要下载个安装器，可以安装相应版本的gcc编译器，我选择的是gcc-4.9.4，在测试环境中可以正常运行</p>
-<ol type="1">
+<ol>
 <li>安装器是mingw-w64-install，安装时注意选择64位，同时安装完了还有一个坑：空格。</li>
-<li>下载器默认的安装路径"C:Files-w64_64-4.9.4-win32-seh-rt_v5-rev0"是包含有空格的，MATLAB并不能识别该路径，所以可以把mingw64移动到不含空格的路径下，比如"C:"。</li>
-</ol></li>
-<li><p>验证一下：</p></li>
+<li>下载器默认的安装路径”C:Files-w64_64-4.9.4-win32-seh-rt_v5-rev0”是包含有空格的，MATLAB并不能识别该路径，所以可以把mingw64移动到不含空格的路径下，比如”C:”。</li>
+</ol>
+</li>
+<li><p>验证一下：</p>
+</li>
 </ol>
 <figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">setenv(<span class="string">&#x27;MW_MINGW64_LOC&#x27;</span>,<span class="string">&#x27;C:\mingw64&#x27;</span>) <span class="comment">% 先配置环境</span></span><br><span class="line">mex -setup</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">输出如下图所示，这样MinGW编译器就配置好了。</span><br><span class="line"></span><br><span class="line">![配置成功输出](config_success.jpg)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 3. a + b 编译测试</span><br><span class="line"></span><br><span class="line">```MATLAB </span><br><span class="line">setenv(<span class="string">&#x27;MW_MINGW64_LOC&#x27;</span>,<span class="string">&#x27;C:\mingw64&#x27;</span>)</span><br><span class="line"></span><br><span class="line">myFunctionName = <span class="string">&#x27;SFunctionName&#x27;</span></span><br><span class="line"></span><br><span class="line">def = legacy_code(<span class="string">&#x27;initialize&#x27;</span>);</span><br><span class="line">def.SFunctionName = myFunctionName ;</span><br><span class="line"><span class="comment">% 注意，输入和输出的变量的名称只能是u1,u2...和y1,y2...</span></span><br><span class="line">def.OutputFcnSpec = <span class="string">&#x27;double y1 = add_2(double u1, double u2)&#x27;</span>;</span><br><span class="line"><span class="comment">% 设置用到的头文件或者源文件</span></span><br><span class="line">def.HeaderFiles = &#123;<span class="string">&#x27;add_2.h&#x27;</span>&#125;;</span><br><span class="line">def.SourceFiles = &#123;<span class="string">&#x27;add_2.c&#125;</span></span><br><span class="line"><span class="string">def.InitializeConditionsFcnSpec = &#x27;</span>buffer_init()&#x27;;</span><br><span class="line"></span><br><span class="line">legacy_code(<span class="string">&#x27;sfcn_cmex_generate&#x27;</span>, def);</span><br><span class="line">legacy_code(<span class="string">&#x27;compile&#x27;</span>, def) ;</span><br></pre></td></tr></table></figure>
-<p>以上代码可以在MATLAB中快捷编译，并且生成Simulink可用的文件"add_2.mex64"，在Simulink中加入S-Function模块，并且将名字设置为"add_2"即可。</p>
+
+<p>以上代码可以在MATLAB中快捷编译，并且生成Simulink可用的文件”add_2.mex64”，在Simulink中加入S-Function模块，并且将名字设置为”add_2”即可。</p>
 <p>add_2.c就可以直接写一个两个数相加的程序验证一下就好了; add_2.h写个函数声明也就可以了。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// add_2.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;add_2.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">add_2</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// add_2.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> ADD_2_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ADD_2_H</span></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">add_2</span><span class="params">(<span class="keyword">double</span> a, <span class="keyword">double</span> b)</span></span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-<h2 id="参考">4. 参考</h2>
-<ol type="1">
+
+<h2 id="4-参考"><a href="#4-参考" class="headerlink" title="4. 参考"></a>4. 参考</h2><ol>
 <li><a target="_blank" rel="noopener" href="https://www.mathworks.com/help/matlab/matlab_external/compiling-c-mex-files-with-mingw.html">Mathworks关于空格的说明</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.mathworks.com/matlabcentral/answers/313298-i-already-have-mingw-on-my-computer-how-do-i-configure-it-to-work-with-matlab">MATLAB 2017后版本注意事项</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=5o5R0VnptZw">印度小哥的解说</a></li>

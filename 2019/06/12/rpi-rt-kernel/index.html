@@ -24,12 +24,12 @@
     var CONFIG = {"hostname":"donghao2nanjing.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="1. 简介 本文档主要根据LeMaRiva的博客内容整理并基于最新的rt分支代码复现，简述以下2个方面：  如何为树莓派编译实时内核 测试实时内核的进程调度延时性能  实验所需硬件：  树莓派3B 8G TF卡  2. 编译 1.获取代码和工具： 123456789101112131415161718192021222324252627282930313233# From">
+  <meta name="description" content="1. 简介本文档主要根据LeMaRiva的博客内容整理并基于最新的rt分支代码复现，简述以下2个方面：  如何为树莓派编译实时内核  测试实时内核的进程调度延时性能    实验所需硬件：   树莓派3B  8G TF卡   2. 编译1.获取代码和工具： 123456789101112131415161718192021222324252627282930313233# From LeMaRiva">
 <meta property="og:type" content="article">
 <meta property="og:title" content="树莓派实时内核编译与测试">
 <meta property="og:url" content="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/index.html">
 <meta property="og:site_name" content="Ramblings from Hao">
-<meta property="og:description" content="1. 简介 本文档主要根据LeMaRiva的博客内容整理并基于最新的rt分支代码复现，简述以下2个方面：  如何为树莓派编译实时内核 测试实时内核的进程调度延时性能  实验所需硬件：  树莓派3B 8G TF卡  2. 编译 1.获取代码和工具： 123456789101112131415161718192021222324252627282930313233# From">
+<meta property="og:description" content="1. 简介本文档主要根据LeMaRiva的博客内容整理并基于最新的rt分支代码复现，简述以下2个方面：  如何为树莓派编译实时内核  测试实时内核的进程调度延时性能    实验所需硬件：   树莓派3B  8G TF卡   2. 编译1.获取代码和工具： 123456789101112131415161718192021222324252627282930313233# From LeMaRiva">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/delay_raspbian.jpg">
 <meta property="og:image" content="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/delay_rt.jpg">
@@ -299,7 +299,7 @@ mjx-container[display="true"] + br {
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1. 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">2.</span> <span class="nav-text">2. 编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">3. 验证与测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">4. 参考</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1. 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E7%BC%96%E8%AF%91"><span class="nav-number">2.</span> <span class="nav-text">2. 编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">3. 验证与测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">4. 参考</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -313,7 +313,7 @@ mjx-container[display="true"] + br {
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -477,37 +477,39 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="简介">1. 简介</h2>
-<p>本文档主要根据<a target="_blank" rel="noopener" href="https://lemariva.com/blog/2018/02/raspberry-pi-rt-preempt-tutorial-for-kernel-4-14-y">LeMaRiva的博客</a>内容整理并基于最新的rt分支代码复现，简述以下2个方面：</p>
-<ol type="1">
-<li>如何为树莓派编译实时内核</li>
-<li>测试实时内核的进程调度延时性能</li>
+        <h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h2><p>本文档主要根据<a target="_blank" rel="noopener" href="https://lemariva.com/blog/2018/02/raspberry-pi-rt-preempt-tutorial-for-kernel-4-14-y">LeMaRiva的博客</a>内容整理并基于最新的rt分支代码复现，简述以下2个方面：</p>
+<ol>
+<li>如何为树莓派编译实时内核 </li>
+<li>测试实时内核的进程调度延时性能  </li>
 </ol>
-<p>实验所需硬件：</p>
-<ol type="1">
-<li>树莓派3B</li>
-<li>8G TF卡</li>
+<p>实验所需硬件： </p>
+<ol>
+<li>树莓派3B </li>
+<li>8G TF卡 </li>
 </ol>
-<h2 id="编译">2. 编译</h2>
-<p>1.获取代码和工具：</p>
+<h2 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h2><p>1.获取代码和工具：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># From LeMaRiva</span></span><br><span class="line">mkdir rpi-rt</span><br><span class="line"><span class="built_in">cd</span> rpi-rt</span><br><span class="line">mkdir rt-kernel <span class="comment"># 用于存放编译产生的文件</span></span><br><span class="line"><span class="built_in">cd</span> rt-kernel</span><br><span class="line">mkdir boot</span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="comment"># 获取树梅派源码</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/raspberrypi/linux.git</span><br><span class="line"><span class="comment"># 获取编译工具</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/raspberrypi/tools.git</span><br><span class="line"><span class="built_in">cd</span> linux</span><br><span class="line">git checkout rpi-4.14.y-rt <span class="comment"># 截至2019年6月16日最新的rt分支</span></span><br><span class="line">​</span><br><span class="line"><span class="comment"># 配置变量</span></span><br><span class="line"><span class="built_in">export</span> ARCH=arm</span><br><span class="line"><span class="built_in">export</span> CROSS_COMPILE=~/rpi-rt/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-</span><br><span class="line"><span class="built_in">export</span> INSTALL_MOD_PATH=~/rpi-rt/rt-kernel</span><br><span class="line"><span class="built_in">export</span> INSTALL_DTBS_PATH=~/rpi-rt/rt-kernel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对RPi 2/3 B以及RPi Compute Module的配置(Compute Module本人测试过，使用该配置)</span></span><br><span class="line"><span class="built_in">export</span> KERNEL=kernel7</span><br><span class="line">make bcm2709-defconfig</span><br><span class="line"><span class="comment"># 对RPi A(+), B(+), Zero</span></span><br><span class="line"><span class="built_in">export</span> KERNEL=kernel</span><br><span class="line">make bcmrpi_defconfig</span><br><span class="line"></span><br><span class="line">vim .config</span><br><span class="line"><span class="comment"># 确认一下字段的配置</span></span><br><span class="line">CONFIG_HIGH_RES_TIMERS=y <span class="comment"># 默认已配置为y</span></span><br><span class="line">CONFIG_PREEMPT_RT_FULL=y <span class="comment"># 默认已配置为y</span></span><br><span class="line">CONFIG_HZ_1000=y <span class="comment"># 需要手动更改</span></span><br><span class="line">CONFIG_HZ=1000 <span class="comment"># 需要手动更改</span></span><br></pre></td></tr></table></figure>
+
 <p>2.编译内核</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">make -j8 zImage</span><br><span class="line">make -j8 modules</span><br><span class="line">make -j8 dtbs</span><br><span class="line">make -j8 modules_install</span><br><span class="line">make -j8 dtbs_install</span><br></pre></td></tr></table></figure>
+
 <p>编译完成后，rt-kernel文件夹中结构为：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── boot</span><br><span class="line">├── lib</span><br><span class="line">├── overlays</span><br><span class="line">├── bcm2708-rpi-0-w.dtb</span><br><span class="line">├── bcm2708-rpi-b.dtb</span><br><span class="line">├── bcm2708-rpi-b-plus.dtb</span><br><span class="line">├── bcm2708-rpi-cm.dtb</span><br><span class="line">├── bcm2709-rpi-2-b.dtb</span><br><span class="line">├── bcm2710-rpi-3-b.dtb</span><br><span class="line">├── bcm2710-rpi-3-b-plus.dtb</span><br><span class="line">├── bcm2710-rpi-cm3.dtb</span><br><span class="line">├── bcm2835-rpi-a.dtb</span><br><span class="line">├── bcm2835-rpi-a-plus.dtb</span><br><span class="line">├── bcm2835-rpi-b.dtb</span><br><span class="line">├── bcm2835-rpi-b-plus.dtb</span><br><span class="line">├── bcm2835-rpi-b-rev2.dtb</span><br><span class="line">├── bcm2835-rpi-zero.dtb</span><br><span class="line">├── bcm2835-rpi-zero-w.dtb</span><br><span class="line">├── bcm2836-rpi-2-b.dtb</span><br><span class="line">└── bcm2837-rpi-3-b.dtb</span><br></pre></td></tr></table></figure>
+
 <p>注意：此处可能产生警告，有关编译时间对应关系的，可以忽略。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./scripts/mkknlimg ./arch/arm/boot/zImage <span class="variable">$INSTALL_MOD_PATH</span>/boot/<span class="variable">$KERNEL</span>.img</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$INSTALL_MOD_PATH</span></span><br><span class="line">tar czf ../rt-kernel.tgz *</span><br><span class="line">scp rt-kernel.tgz pi@&lt;IPAddress&gt;:/tmp</span><br></pre></td></tr></table></figure>
+
 <p>3.替换内核 进入树梅派终端：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /tmp</span><br><span class="line">tar xzf rt-kernel.tgz</span><br><span class="line"><span class="built_in">cd</span> boot</span><br><span class="line">sudo cp -rd * /boot/</span><br><span class="line"><span class="built_in">cd</span> ../lib</span><br><span class="line">sudo cp -rd * /lib/</span><br><span class="line">~$ sudo nano /boot/config.txt</span><br><span class="line"><span class="comment">## 树梅派 3B 或者 Compute Module</span></span><br><span class="line">kernel=vmlinuz-4.14.91-rt49-v7+</span><br><span class="line"><span class="comment"># 树梅派A(+), B(+), Zero</span></span><br><span class="line">kernel=vmlinuz-4.14.91-rt49+</span><br><span class="line"></span><br><span class="line">sudo reboot</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">如何查看编译内核的版本呢？进入rpi-rt/rt-kernel/lib/modules文件夹下，即可通过文件夹名称看到所编译内核的具体版本号。 [LeMaRiva博客](https://lemariva.com/blog/2018/02/raspberry-pi-rt-preempt-tutorial-for-kernel-4-14-y)中提到了需要在cmdline.txt中进行额外的设置。不过我在3B和Compute Module中都未添加那些额外的配置，测试未发现问题，可能是因为在最新的实时内核中已经修复了bug。重启后查看内核版本号即可确认内核替换成功：</span><br><span class="line"></span><br><span class="line">```bash </span><br><span class="line">uname -r</span><br><span class="line">4.14.91-rt49-v7+</span><br></pre></td></tr></table></figure>
-<h2 id="验证与测试">3. 验证与测试</h2>
-<p>可以采用rt-tests工具中的cyclictest对于内核的进程响应延时进行测试。参考Tiejun Chen的分享的脚本，可以自动测试并调用gnuplot生成测试结果图像。</p>
+
+<h2 id="3-验证与测试"><a href="#3-验证与测试" class="headerlink" title="3. 验证与测试"></a>3. 验证与测试</h2><p>可以采用rt-tests工具中的cyclictest对于内核的进程响应延时进行测试。参考Tiejun Chen的分享的脚本，可以自动测试并调用gnuplot生成测试结果图像。</p>
 <p>下载编译rt-tests：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential <span class="comment"># libnuma-dev在raspbian stretch中找不到，也不需要</span></span><br><span class="line">git <span class="built_in">clone</span> git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git</span><br><span class="line"><span class="built_in">cd</span> rt-tests</span><br><span class="line">git checkout stable/v1.0</span><br><span class="line">make all</span><br><span class="line">sudo make install</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">自动化测试脚本：</span><br><span class="line"></span><br><span class="line">```bash </span><br><span class="line">wget https://www.osadl.org/uploads/media/mklatencyplot.bash</span><br><span class="line">sudo apt install gnuplot <span class="comment"># 该脚本使用gnuplot</span></span><br></pre></td></tr></table></figure>
+
 <p>为了节约测试验证的时间，我把该脚本中的次数由1e8改成了1e7。这可能导致样本不够，但是也足够表现实时内核的性能。 实测在默认内核下，最大延时为422us；而在实时内核下，最大延时为118us。</p>
-<p><img src="delay_raspbian.jpg" alt="Latency of Raspbian" /> <img src="delay_rt.jpg" alt="Latency of RT kernel" /></p>
-<h2 id="参考">4. 参考</h2>
-<ol type="1">
-<li><a target="_blank" rel="noopener" href="https://lemariva.com/blog/2018/02/raspberry-pi-rt-preempt-tutorial-for-kernel-4-14-y">LeMaRiva's Blog</a></li>
+<p><img src="delay_raspbian.jpg" alt="Latency of Raspbian"><br><img src="delay_rt.jpg" alt="Latency of RT kernel"></p>
+<h2 id="4-参考"><a href="#4-参考" class="headerlink" title="4. 参考"></a>4. 参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://lemariva.com/blog/2018/02/raspberry-pi-rt-preempt-tutorial-for-kernel-4-14-y">LeMaRiva’s Blog</a></li>
 <li><a target="_blank" rel="noopener" href="https://elinux.org/images/d/d8/Rpi-rt-linux.pdf">Tiejun Chen 在OpenIoT Summit of North America上的分享</a></li>
 </ol>
 
@@ -532,6 +534,9 @@ mjx-container[display="true"] + br {
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2020/11/10/life-meaning/" rel="next" title="生活的意义">
+                  生活的意义 <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>

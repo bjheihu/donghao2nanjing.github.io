@@ -24,25 +24,20 @@
     var CONFIG = {"hostname":"donghao2nanjing.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="1. 简介 本文档主要根据LeMaRiva的博客内容整理并基于最新的rt分支代码复现，简述以下2个方面：  如何为树莓派编译实时内核 测试实时内核的进程调度延时性能  实验所需硬件：  树莓派3B 8G TF卡  2. 编译 1.获取代码和工具： 123456789101112131415161718192021222324252627282930313233# From">
+  <meta name="description" content="unmet dependency 本着能省一事就省一事的原则，我装了Ubuntu 20.04 LTS，可是在安装ROS noetic的时候还是出现了unmet dependency的问题。 默认的--fix-missing是没有用的，看看哪些包出问题了就用下面的命令强制覆写一下就OK了。 12sudo dpkg -i --force-overwrite &lt;filename&gt;sudo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="树莓派实时内核编译与测试">
-<meta property="og:url" content="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/index.html">
+<meta property="og:title" content="刚开始学习ROS的一些坑(持续更新)">
+<meta property="og:url" content="http://donghao2nanjing.github.io/2020/12/20/ros-learn/index.html">
 <meta property="og:site_name" content="Ramblings from Hao">
-<meta property="og:description" content="1. 简介 本文档主要根据LeMaRiva的博客内容整理并基于最新的rt分支代码复现，简述以下2个方面：  如何为树莓派编译实时内核 测试实时内核的进程调度延时性能  实验所需硬件：  树莓派3B 8G TF卡  2. 编译 1.获取代码和工具： 123456789101112131415161718192021222324252627282930313233# From">
+<meta property="og:description" content="unmet dependency 本着能省一事就省一事的原则，我装了Ubuntu 20.04 LTS，可是在安装ROS noetic的时候还是出现了unmet dependency的问题。 默认的--fix-missing是没有用的，看看哪些包出问题了就用下面的命令强制覆写一下就OK了。 12sudo dpkg -i --force-overwrite &lt;filename&gt;sudo">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/delay_raspbian.jpg">
-<meta property="og:image" content="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/delay_rt.jpg">
-<meta property="article:published_time" content="2019-06-12T15:50:56.000Z">
-<meta property="article:modified_time" content="2020-09-01T16:07:45.171Z">
+<meta property="article:published_time" content="2020-12-19T16:52:01.000Z">
+<meta property="article:modified_time" content="2020-12-19T17:05:29.062Z">
 <meta property="article:author" content="Hao Dong">
-<meta property="article:tag" content="RPi">
-<meta property="article:tag" content="realtime">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/delay_raspbian.jpg">
 
 
-<link rel="canonical" href="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/">
+<link rel="canonical" href="http://donghao2nanjing.github.io/2020/12/20/ros-learn/">
 
 
 <script class="page-configurations">
@@ -55,7 +50,7 @@
   };
 </script>
 
-  <title>树莓派实时内核编译与测试 | Ramblings from Hao</title>
+  <title>刚开始学习ROS的一些坑(持续更新) | Ramblings from Hao</title>
   
 
 
@@ -299,7 +294,7 @@ mjx-container[display="true"] + br {
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1. 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">2.</span> <span class="nav-text">2. 编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E4%B8%8E%E6%B5%8B%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">3. 验证与测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">4. 参考</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#unmet-dependency"><span class="nav-number">1.</span> <span class="nav-text">unmet dependency</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ros_readbagfile.py"><span class="nav-number">2.</span> <span class="nav-text">ros_readbagfile.py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#roswtf-what-the-fuck"><span class="nav-number">3.</span> <span class="nav-text">roswtf: what the fuck?</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -403,7 +398,7 @@ mjx-container[display="true"] + br {
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/">
+    <link itemprop="mainEntityOfPage" href="http://donghao2nanjing.github.io/2020/12/20/ros-learn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -416,7 +411,7 @@ mjx-container[display="true"] + br {
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          树莓派实时内核编译与测试
+          刚开始学习ROS的一些坑(持续更新)
         </h1>
 
         <div class="post-meta-container">
@@ -426,16 +421,10 @@ mjx-container[display="true"] + br {
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">Posted on</span>
+      
 
-      <time title="Created: 2019-06-12 23:50:56" itemprop="dateCreated datePublished" datetime="2019-06-12T23:50:56+08:00">2019-06-12</time>
+      <time title="Created: 2020-12-20 00:52:01 / Modified: 01:05:29" itemprop="dateCreated datePublished" datetime="2020-12-20T00:52:01+08:00">2020-12-20</time>
     </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-09-02 00:07:45" itemprop="dateModified" datetime="2020-09-02T00:07:45+08:00">2020-09-02</time>
-      </span>
 
   
   
@@ -446,8 +435,8 @@ mjx-container[display="true"] + br {
       </span>
       <span class="post-meta-item-text">Disqus: </span>
     
-    <a title="disqus" href="/2019/06/12/rpi-rt-kernel/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/06/12/rpi-rt-kernel/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2020/12/20/ros-learn/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/12/20/ros-learn/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -459,14 +448,14 @@ mjx-container[display="true"] + br {
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">Symbols count in article: </span>
-      <span>2.8k</span>
+      <span>444</span>
     </span>
     <span class="post-meta-item" title="Reading time">
       <span class="post-meta-item-icon">
         <i class="far fa-clock"></i>
       </span>
       <span class="post-meta-item-text">Reading time &asymp;</span>
-      <span>3 mins.</span>
+      <span>1 mins.</span>
     </span>
 </div>
 
@@ -477,39 +466,15 @@ mjx-container[display="true"] + br {
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="简介">1. 简介</h2>
-<p>本文档主要根据<a target="_blank" rel="noopener" href="https://lemariva.com/blog/2018/02/raspberry-pi-rt-preempt-tutorial-for-kernel-4-14-y">LeMaRiva的博客</a>内容整理并基于最新的rt分支代码复现，简述以下2个方面：</p>
-<ol type="1">
-<li>如何为树莓派编译实时内核</li>
-<li>测试实时内核的进程调度延时性能</li>
-</ol>
-<p>实验所需硬件：</p>
-<ol type="1">
-<li>树莓派3B</li>
-<li>8G TF卡</li>
-</ol>
-<h2 id="编译">2. 编译</h2>
-<p>1.获取代码和工具：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># From LeMaRiva</span></span><br><span class="line">mkdir rpi-rt</span><br><span class="line"><span class="built_in">cd</span> rpi-rt</span><br><span class="line">mkdir rt-kernel <span class="comment"># 用于存放编译产生的文件</span></span><br><span class="line"><span class="built_in">cd</span> rt-kernel</span><br><span class="line">mkdir boot</span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line"><span class="comment"># 获取树梅派源码</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/raspberrypi/linux.git</span><br><span class="line"><span class="comment"># 获取编译工具</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/raspberrypi/tools.git</span><br><span class="line"><span class="built_in">cd</span> linux</span><br><span class="line">git checkout rpi-4.14.y-rt <span class="comment"># 截至2019年6月16日最新的rt分支</span></span><br><span class="line">​</span><br><span class="line"><span class="comment"># 配置变量</span></span><br><span class="line"><span class="built_in">export</span> ARCH=arm</span><br><span class="line"><span class="built_in">export</span> CROSS_COMPILE=~/rpi-rt/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-</span><br><span class="line"><span class="built_in">export</span> INSTALL_MOD_PATH=~/rpi-rt/rt-kernel</span><br><span class="line"><span class="built_in">export</span> INSTALL_DTBS_PATH=~/rpi-rt/rt-kernel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对RPi 2/3 B以及RPi Compute Module的配置(Compute Module本人测试过，使用该配置)</span></span><br><span class="line"><span class="built_in">export</span> KERNEL=kernel7</span><br><span class="line">make bcm2709-defconfig</span><br><span class="line"><span class="comment"># 对RPi A(+), B(+), Zero</span></span><br><span class="line"><span class="built_in">export</span> KERNEL=kernel</span><br><span class="line">make bcmrpi_defconfig</span><br><span class="line"></span><br><span class="line">vim .config</span><br><span class="line"><span class="comment"># 确认一下字段的配置</span></span><br><span class="line">CONFIG_HIGH_RES_TIMERS=y <span class="comment"># 默认已配置为y</span></span><br><span class="line">CONFIG_PREEMPT_RT_FULL=y <span class="comment"># 默认已配置为y</span></span><br><span class="line">CONFIG_HZ_1000=y <span class="comment"># 需要手动更改</span></span><br><span class="line">CONFIG_HZ=1000 <span class="comment"># 需要手动更改</span></span><br></pre></td></tr></table></figure>
-<p>2.编译内核</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">make -j8 zImage</span><br><span class="line">make -j8 modules</span><br><span class="line">make -j8 dtbs</span><br><span class="line">make -j8 modules_install</span><br><span class="line">make -j8 dtbs_install</span><br></pre></td></tr></table></figure>
-<p>编译完成后，rt-kernel文件夹中结构为：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── boot</span><br><span class="line">├── lib</span><br><span class="line">├── overlays</span><br><span class="line">├── bcm2708-rpi-0-w.dtb</span><br><span class="line">├── bcm2708-rpi-b.dtb</span><br><span class="line">├── bcm2708-rpi-b-plus.dtb</span><br><span class="line">├── bcm2708-rpi-cm.dtb</span><br><span class="line">├── bcm2709-rpi-2-b.dtb</span><br><span class="line">├── bcm2710-rpi-3-b.dtb</span><br><span class="line">├── bcm2710-rpi-3-b-plus.dtb</span><br><span class="line">├── bcm2710-rpi-cm3.dtb</span><br><span class="line">├── bcm2835-rpi-a.dtb</span><br><span class="line">├── bcm2835-rpi-a-plus.dtb</span><br><span class="line">├── bcm2835-rpi-b.dtb</span><br><span class="line">├── bcm2835-rpi-b-plus.dtb</span><br><span class="line">├── bcm2835-rpi-b-rev2.dtb</span><br><span class="line">├── bcm2835-rpi-zero.dtb</span><br><span class="line">├── bcm2835-rpi-zero-w.dtb</span><br><span class="line">├── bcm2836-rpi-2-b.dtb</span><br><span class="line">└── bcm2837-rpi-3-b.dtb</span><br></pre></td></tr></table></figure>
-<p>注意：此处可能产生警告，有关编译时间对应关系的，可以忽略。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./scripts/mkknlimg ./arch/arm/boot/zImage <span class="variable">$INSTALL_MOD_PATH</span>/boot/<span class="variable">$KERNEL</span>.img</span><br><span class="line"><span class="built_in">cd</span> <span class="variable">$INSTALL_MOD_PATH</span></span><br><span class="line">tar czf ../rt-kernel.tgz *</span><br><span class="line">scp rt-kernel.tgz pi@&lt;IPAddress&gt;:/tmp</span><br></pre></td></tr></table></figure>
-<p>3.替换内核 进入树梅派终端：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /tmp</span><br><span class="line">tar xzf rt-kernel.tgz</span><br><span class="line"><span class="built_in">cd</span> boot</span><br><span class="line">sudo cp -rd * /boot/</span><br><span class="line"><span class="built_in">cd</span> ../lib</span><br><span class="line">sudo cp -rd * /lib/</span><br><span class="line">~$ sudo nano /boot/config.txt</span><br><span class="line"><span class="comment">## 树梅派 3B 或者 Compute Module</span></span><br><span class="line">kernel=vmlinuz-4.14.91-rt49-v7+</span><br><span class="line"><span class="comment"># 树梅派A(+), B(+), Zero</span></span><br><span class="line">kernel=vmlinuz-4.14.91-rt49+</span><br><span class="line"></span><br><span class="line">sudo reboot</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">如何查看编译内核的版本呢？进入rpi-rt/rt-kernel/lib/modules文件夹下，即可通过文件夹名称看到所编译内核的具体版本号。 [LeMaRiva博客](https://lemariva.com/blog/2018/02/raspberry-pi-rt-preempt-tutorial-for-kernel-4-14-y)中提到了需要在cmdline.txt中进行额外的设置。不过我在3B和Compute Module中都未添加那些额外的配置，测试未发现问题，可能是因为在最新的实时内核中已经修复了bug。重启后查看内核版本号即可确认内核替换成功：</span><br><span class="line"></span><br><span class="line">```bash </span><br><span class="line">uname -r</span><br><span class="line">4.14.91-rt49-v7+</span><br></pre></td></tr></table></figure>
-<h2 id="验证与测试">3. 验证与测试</h2>
-<p>可以采用rt-tests工具中的cyclictest对于内核的进程响应延时进行测试。参考Tiejun Chen的分享的脚本，可以自动测试并调用gnuplot生成测试结果图像。</p>
-<p>下载编译rt-tests：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential <span class="comment"># libnuma-dev在raspbian stretch中找不到，也不需要</span></span><br><span class="line">git <span class="built_in">clone</span> git://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git</span><br><span class="line"><span class="built_in">cd</span> rt-tests</span><br><span class="line">git checkout stable/v1.0</span><br><span class="line">make all</span><br><span class="line">sudo make install</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">自动化测试脚本：</span><br><span class="line"></span><br><span class="line">```bash </span><br><span class="line">wget https://www.osadl.org/uploads/media/mklatencyplot.bash</span><br><span class="line">sudo apt install gnuplot <span class="comment"># 该脚本使用gnuplot</span></span><br></pre></td></tr></table></figure>
-<p>为了节约测试验证的时间，我把该脚本中的次数由1e8改成了1e7。这可能导致样本不够，但是也足够表现实时内核的性能。 实测在默认内核下，最大延时为422us；而在实时内核下，最大延时为118us。</p>
-<p><img src="delay_raspbian.jpg" alt="Latency of Raspbian" /> <img src="delay_rt.jpg" alt="Latency of RT kernel" /></p>
-<h2 id="参考">4. 参考</h2>
-<ol type="1">
-<li><a target="_blank" rel="noopener" href="https://lemariva.com/blog/2018/02/raspberry-pi-rt-preempt-tutorial-for-kernel-4-14-y">LeMaRiva's Blog</a></li>
-<li><a target="_blank" rel="noopener" href="https://elinux.org/images/d/d8/Rpi-rt-linux.pdf">Tiejun Chen 在OpenIoT Summit of North America上的分享</a></li>
-</ol>
+        <h2 id="unmet-dependency">unmet dependency</h2>
+<p>本着能省一事就省一事的原则，我装了Ubuntu 20.04 LTS，可是在安装ROS noetic的时候还是出现了<em>unmet dependency</em>的问题。 默认的--fix-missing是没有用的，看看哪些包出问题了就用下面的命令强制覆写一下就OK了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i --force-overwrite &lt;filename&gt;</span><br><span class="line">sudo apt install --fix-missing</span><br></pre></td></tr></table></figure>
+<h2 id="ros_readbagfile.py">ros_readbagfile.py</h2>
+<p>这个文件呢本来是为了更有效率地阅读bag文件的，据wiki说要快7倍。 在实际使用过程中出现了依赖问题，提示缺少动态链接库之类的。 从python2转换到python3解决了这个问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 改下文件头的解释器设置</span><br><span class="line">#!&#x2F;usr&#x2F;bin&#x2F;python3</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2to3 -f has_key -w ros_readbagfile.py</span><br></pre></td></tr></table></figure>
+<h2 id="roswtf-what-the-fuck">roswtf: what the fuck?</h2>
+<p>在出现问题的时候，用这个命令排查一下，还是挺方便的:)</p>
 
     </div>
 
@@ -518,23 +483,16 @@ mjx-container[display="true"] + br {
     
 
     <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/RPi/" rel="tag"># RPi</a>
-              <a href="/tags/realtime/" rel="tag"># realtime</a>
-          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2018/08/31/bodeplot/" rel="prev" title="从伯德图说起">
-                  <i class="fa fa-chevron-left"></i> 从伯德图说起
+                <a href="/2020/11/10/life-meaning/" rel="prev" title="生活的意义">
+                  <i class="fa fa-chevron-left"></i> 生活的意义
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2020/11/10/life-meaning/" rel="next" title="生活的意义">
-                  生活的意义 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
@@ -672,9 +630,9 @@ mjx-container[display="true"] + br {
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "http://donghao2nanjing.github.io/2019/06/12/rpi-rt-kernel/";
-    this.page.identifier = "2019/06/12/rpi-rt-kernel/";
-    this.page.title = "树莓派实时内核编译与测试";
+    this.page.url = "http://donghao2nanjing.github.io/2020/12/20/ros-learn/";
+    this.page.identifier = "2020/12/20/ros-learn/";
+    this.page.title = "刚开始学习ROS的一些坑(持续更新)";
     };
   NexT.utils.loadComments('#disqus_thread', () => {
     if (window.DISQUS) {
